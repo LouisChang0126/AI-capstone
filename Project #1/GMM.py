@@ -7,10 +7,29 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import adjusted_rand_score, accuracy_score
 from sklearn.decomposition import PCA
 from scipy.optimize import linear_sum_assignment
+import random
+
+BASE_PATH = "dataset2/" # dataset2/
+
+# Apply random data augmentation techniques to the audio.
+def augment_audio(y, sr):
+    # Random pitch shifting (-2 to +2 semitones)
+    n_steps = random.uniform(-2, 2)
+    y = librosa.effects.pitch_shift(y, sr=sr, n_steps=n_steps)
+
+    # Add Gaussian noise with random variance
+    noise_level = random.uniform(0.002, 0.01)
+    noise = np.random.normal(0, noise_level, y.shape)
+    y = y + noise
+
+    return y
 
 # Function to extract audio features from a given file
 def extract_features(file_path):
     y, sr = librosa.load(file_path, sr=None)
+
+    y = augment_audio(y, sr) # Apply data augmentation or not, can be annotated
+
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13) # Extract MFCC features
     zcr = librosa.feature.zero_crossing_rate(y) # Extract ZCR feature
     rms = librosa.feature.rms(y=y) # Extract RMS energy feature
@@ -52,7 +71,7 @@ if __name__ == "__main__":
     labels = []
 
     # Dataset and class labels
-    base_path = "dataset/" # dataset2
+    base_path = BASE_PATH
     class_names = ["Drum_Solo", "Piano_Solo", "Violin_Solo", "Acoustic_Guitar_Solo", "Electric_Guitar_Solo"]
     
     # Loop through each instrument category

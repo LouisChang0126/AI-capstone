@@ -19,10 +19,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Hyperparameter
 SAMPLE_RATE = 22050
 N_MELS = 128
-BATCH_SIZE = 16
+BATCH_SIZE = 8 # 8, 16, 32, 64
 EPOCHS = 10
 LEARNING_RATE = 0.001
 KFOLDS = 5
+BASE_PATH = "dataset/" # dataset2/
 
 # Random seeds
 random.seed(123)
@@ -119,7 +120,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names):
 
 if __name__ == "__main__":
     # Dataset and class labels
-    base_path = "dataset/" # dataset2
+    base_path = BASE_PATH
     class_names = ["Drum_Solo", "Piano_Solo", "Violin_Solo", "Acoustic_Guitar_Solo", "Electric_Guitar_Solo"]
     dataset = AudioDataset(base_path, class_names)
     accs = []

@@ -6,6 +6,7 @@ from stable_baselines3 import SAC, TD3, A2C, PPO
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
 from tqdm import tqdm
+import pickle
 # os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 TOTAL_TIMESTEPS = 1_000_000
@@ -80,27 +81,26 @@ def main():
     )
 
     # 儲存最終模型
-    model.save(f"{algo_name.lower()}_ant_final")
+    os.makedirs("final_models", exist_ok=True)
+    model.save(f"final_models/{algo_name.lower()}_ant_final")
+
+    # 儲存最終的 training_log 曲線
+    os.makedirs("training_log", exist_ok=True)
+    with open(f"training_log/training_log_{algo_name.lower()}.pkl", "wb") as f:
+        pickle.dump({
+            "rewards": reward_logger.rewards,
+        }, f)
 
     # reward 曲線
+    os.makedirs("reward_plot", exist_ok=True)
     plt.figure()
     plt.plot(reward_logger.rewards)
     plt.xlabel("Episodes")
     plt.ylabel("Episode Reward")
     plt.title(f"Ant-v5 Training Reward ({algo_name})")
     plt.grid()
-    plt.savefig(f"ant_reward_curve_{algo_name.lower()}.png")
+    plt.savefig(f"reward_plot/ant_reward_curve_{algo_name.lower()}.png")
     plt.show()
-
-    # episode 長度曲線
-    # plt.figure()
-    # plt.plot(reward_logger.ep_lengths)
-    # plt.xlabel("Episodes")
-    # plt.ylabel("Episode Length")
-    # plt.title(f"Ant-v5 Episode Length ({algo_name})")
-    # plt.grid()
-    # plt.savefig(f"ant_episode_length_{algo_name.lower()}.png")
-    # plt.show()
 
     env.close()
     eval_env.close()

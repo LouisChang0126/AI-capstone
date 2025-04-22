@@ -1,5 +1,7 @@
 import os
 import gymnasium as gym
+import ale_py
+gym.register_envs(ale_py)
 from gymnasium.wrappers import RecordVideo
 from stable_baselines3 import A2C, PPO
 
@@ -16,9 +18,9 @@ def record_video(algo_name: str, model_path: str, video_length: int = 1000):
 
     # 建立環境
     env = RecordVideo(
-        gym.make("Ant-v5", render_mode="rgb_array"),
+        gym.make("ALE/Breakout-v5", render_mode="rgb_array"),
         video_folder="videos",
-        name_prefix=f"{algo_name}_ant"
+        name_prefix=f"{algo_name}_breakout"
     )
 
     # 載入模型
@@ -36,7 +38,6 @@ def record_video(algo_name: str, model_path: str, video_length: int = 1000):
 
 if __name__ == "__main__":
     os.makedirs("videos", exist_ok=True)
-    # 範例使用 SAC 模型
     record_video(
         algo_name="ppo",
         model_path="best_model_ppo_clip/best_model",

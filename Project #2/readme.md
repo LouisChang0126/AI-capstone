@@ -13,7 +13,7 @@ python generate_video.py
 ```
 Breakout-v5
 ```
-cd breakout
+cd breakout_v2
 python train_breakout.py --num-envs NUM_ENV --algo {A2C,PPO} [--clip]
 python test_breakout.py
 python plot_reward_curve.py

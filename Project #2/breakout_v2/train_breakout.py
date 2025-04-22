@@ -12,7 +12,7 @@ from stable_baselines3.common.atari_wrappers import ClipRewardEnv, FireResetEnv
 from tqdm import tqdm
 import numpy as np
 import pickle
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 TOTAL_TIMESTEPS = 20_000_000
 
